@@ -1,0 +1,30 @@
+{
+    "properties": {
+        "displayName": "Deny creation of resources without tags",
+        "policyType": "Custom",
+        "mode": "Indexed",
+        "description": "This policy denies the creation of any resource that does not include at least one tag.",
+        "metadata": {
+            "version": "2.0.0",
+            "category": "Tags",
+        },
+        "parameters": {
+            "tagName": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Tag Name",
+                    "description": "Name of the tag: e.g. - 'environment'"
+                }
+            }
+        },
+        "policyRule": {
+            "if": {
+                "field": "[concat('tags[', parameters('tagName'), ']')]",
+                "exists": "false"
+            },
+            "then": {
+                "effect": "deny"
+            }
+        }
+    }
+}
