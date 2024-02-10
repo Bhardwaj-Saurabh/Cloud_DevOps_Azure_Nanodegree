@@ -1,26 +1,78 @@
 # Azure Infrastructure Operations Project: Deploying a scalable IaaS web server in Azure
 
-### Introduction
-For this project, you will write a Packer template and a Terraform template to deploy a customizable, scalable web server in Azure.
+## Introduction
 
-### Getting Started
-1. Clone this repository
+This project includes the creation and deployment of a highly customizable and scalable IaaS web server on Microsoft Azure using HashiCorp Packer and Terraform. It is designed to allow users to quickly and efficiently deploy a web server environment by specifying their own configurations, such as the Azure subscription ID, client ID, and client secret. The scalability feature of the project enables users to define the required number of virtual machines (VMs) based on their needs, ensuring that the deployment can handle varying loads.
 
-2. Create your infrastructure as code
+## Getting Started
+To utilize this project for deploying your own scalable web server in Azure, follow these steps:
 
-3. Update this README to reflect how someone would use your code.
+**Clone this Repository:** Start by cloning this repository to your local machine to get access to all necessary files for deployment.
 
-### Dependencies
-1. Create an [Azure Account](https://portal.azure.com) 
-2. Install the [Azure command line interface](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-3. Install [Packer](https://www.packer.io/downloads)
-4. Install [Terraform](https://www.terraform.io/downloads.html)
+**Create Your Infrastructure as Code:** Utilize the provided Packer and Terraform templates to define your infrastructure.
 
-### Instructions
-**Your words here**
+**Customize the Deployment:** Modify the provided templates with your specific Azure credentials and desired configurations.
 
-### Output
-**Your words here**
+## Dependencies
+**Azure Account:** You'll need an active Azure account. If you don't have one, sign up for a free trial.
+**Azure CLI:** Install the Azure Command Line Interface to interact with Azure resources.
+**Packer:** Install Packer for creating the server images.
+**Terraform:** Install Terraform for deploying the infrastructure.
+
+## Instructions
+### 1. Create Azure Credentials
+Generate a service principal in Azure with the following command:
+```
+az ad sp create-for-rbac --query "{ client_id: appId, client_secret: password, tenant_id: tenant }"
+```
+Update the client_id, client_secret, and tenant_id in the webserver.json Packer template with the output from the above command.
+
+### 2. Customizing and Scaling the Web Server
+
+The num_of_vms variable in the variable.tf file is set to 2 by default. Adjust this number according to your requirements.
+
+Customize other configurations such as packer_image_name, packer_resource_group, tags, resource_group, and location in the variable.tf file.
+
+### 3. Enforcing Resource Tagging Policy
+
+- Create the Azure policy definition to deny creation of untagged resources by running create_az_policy_definition.sh.
+- Assign the policy using the Azure Portal.
+- Verify policy assignment with az policy assignment list.
+
+### 4. Create a Server Image with Packer
+Create an image resource group using:
+```
+az group create --location northeurope --name PolicyRG
+```
+Fill in the required fields in the server.json Packer template.
+
+Build the Packer image with packer build webserver.json.
+
+Use az image list and az image delete to manage your images.
+
+### 5. Deploy Infrastructure with Terraform
+
+- Prepare main.tf and variable.tf with your desired infrastructure configuration.
+
+- Initialize Terraform with terraform init.
+
+- Review the deployment plan using terraform plan -out solution.plan.
+
+- Apply the deployment with terraform apply "solution.plan".
+
+### 6. Cleanup
+
+Destroy all resources created by Terraform with terraform destroy.
+Delete the Packer image with `az image delete -g PolicyRG -n <packer image name>`
+
+## Output
+After successfully applying the Terraform configuration, you should have a fully functional, scalable web server deployed in Azure. Below are screenshots demonstrating the outcomes:
+
+Packer Image Creation: 
+
+<img src="policy/tagging-policy-screenshot.png"> 
+
+Terraform Apply Result: 
 
 ```
 data.azurerm_image.web: Reading...
