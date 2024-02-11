@@ -8,7 +8,6 @@ variable "location" {
   default = "East US"
 }
 
-  
 variable "resource_group" {
   description = "Name of the resource group"
   default     = "Azuredevops"
