@@ -1,30 +1,32 @@
 {
     "properties": {
-        "displayName": "Require a tag on resources",
-        "policyType": "BuiltIn",
+        "policyType": "Custom",
         "mode": "Indexed",
-        "description": "Enforces existence of a tag. Does not apply to resource groups.",
         "metadata": {
-            "version": "1.0.1",
-            "category": "Tags"
-        },
-        "parameters": {
-            "tagName": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "Tag Name",
-                    "description": "Name of the tag, such as 'environment'"
-                }
-            }
+            "createdBy": "5ff6c015-3855-4165-ae6f-ef27fbf71730",
+            "createdOn": "2024-02-11T15:18:54.1720394Z",
+            "updatedBy": null,
+            "updatedOn": null
         },
         "policyRule": {
             "if": {
-                "field": "[concat('tags[', parameters('tagName'), ']')]",
+                "field": "tags",
                 "exists": "false"
             },
             "then": {
                 "effect": "deny"
             }
         }
+    },
+    "id": "/subscriptions/373225e3-4428-4fd7-bd11-c0f187aa1371/providers/Microsoft.Authorization/policyDefinitions/tagging-policy",
+    "type": "Microsoft.Authorization/policyDefinitions",
+    "name": "tagging-policy",
+    "systemData": {
+        "createdBy": "odl_user_252456@udacityhol.onmicrosoft.com",
+        "createdByType": "User",
+        "createdAt": "2024-02-11T15:18:54.1318373Z",
+        "lastModifiedBy": "odl_user_252456@udacityhol.onmicrosoft.com",
+        "lastModifiedByType": "User",
+        "lastModifiedAt": "2024-02-11T15:18:54.1318373Z"
     }
 }
