@@ -33,10 +33,28 @@
 			"inline": [
 				"apt-get update",
 				"apt-get upgrade -y",
-				"echo 'Hello, World!' > index.html",
-				"nohup busybox httpd -f -p 80 &"
+				"echo 'Hello, World!' > /home/packer/index.html",
+				"touch /home/packer/http.service",
+				"echo '[Unit]' > /home/packer/http.service",
+				"echo 'Description=This is an example of webservice' >> /home/packer/http.service",
+				"echo 'After=network.target' >> /home/packer/http.service",
+				"echo 'StartLimitIntervalSec=0' >> /home/packer/http.service",
+				"echo '[Service]' >> /home/packer/http.service",
+				"echo 'RemainAfterExit=yes' >> /home/packer/http.service",
+				"echo 'Restart=always' >> /home/packer/http.service",
+				"echo 'RestartSec=1' >> /home/packer/http.service",
+				"echo 'User=root' >> /home/packer/http.service",
+				"echo 'ExecStart=/bin/busybox httpd -f -p 8080 -h /home/packer' >> /home/packer/http.service",
+				"echo '[Install]' >> /home/packer/http.service",
+				"echo 'WantedBy=multi-user.target' >> /home/packer/http.service",
+				"sudo mv /home/packer/http.service /etc/systemd/system/http.service",
+				"sudo chmod 644 /etc/systemd/system/http.service",
+				"sudo chown root:root /etc/systemd/system/http.service",
+				"sudo systemctl enable http.service",
+				"sudo systemctl daemon-reload",
+				"sudo systemctl start http.service"
 			],
-			"inline_shebang": "/bin/sh -x",
+			"inline_shebang": "/bin/bash -x",
 			"type": "shell"
 		}
 	]
